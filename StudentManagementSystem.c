@@ -1,3 +1,6 @@
+/**
+    Md. Hasibur Rahman
+*/
 
 #include<stdio.h>
 #include<conio.h>
@@ -7,14 +10,15 @@
 typedef struct
 {
     int Student_ID;
-    char full_name[30];
-    char father_name[30];
-    char mother_name[30];
+    char full_name[20];
+    char father_name[20];
+    char mother_name[20];
     int age;
 } StudentInfo;
 
 
 // function prototype
+void login();
 void addStudentsInfo(StudentInfo Student_DB[], int StudentCount);
 void updateStudentsInfo(StudentInfo Student_DB[], int StudentCount);
 void findStudentsInfo(StudentInfo Student_DB[], int StudentCount);
@@ -27,6 +31,7 @@ void WriteDB(FILE *file, StudentInfo Student_DB[], int StudentCount);
 // main function
 int main()
 {
+    login();
     StudentInfo Student_DB[1000];
 
     int StudentCount = 0, option;
@@ -105,6 +110,38 @@ int main()
     return 0;
 }
 
+void login()
+{
+    char username[15];
+    char password[12];
+
+
+    printf("\t\t\t\t\tEnter username: ");
+    scanf("%s",&username);
+
+    printf("\t\t\t\t\tEnter your password: ");
+    scanf("%s",&password);
+
+    if(strcmp(username,"student")==0)
+    {
+        if(strcmp(password,"student")==0)
+        {
+
+            printf("\n\t\t\t\t\tWelcome.Login Success!");
+
+
+        }
+        else
+        {
+            printf("\n\t\t\t\t\twrong password");
+        }
+    }
+    else
+    {
+        printf("\n\t\t\t\t\tUser doesn't exist");
+    }
+}
+
 // function (addStudentsInfo)
 void addStudentsInfo(StudentInfo Student_DB[], int StudentCount)
 {
@@ -114,7 +151,7 @@ void addStudentsInfo(StudentInfo Student_DB[], int StudentCount)
     // check for the uniqueness of the students
     do
     {
-        printf("\n\t\t\tstudents ID: ");
+        printf("\n\t\t\tStudents ID: ");
         scanf("%d", &students.Student_ID);
         fileCheck = 0;
         for(i=0; i<StudentCount; i++)
@@ -126,17 +163,14 @@ void addStudentsInfo(StudentInfo Student_DB[], int StudentCount)
             }
         }
     }
-    while(fileCheck !=0);
+    while(fileCheck != 0);
 
-    getchar();
     printf("\t\t\tName of the students: ");
-    scanf("%[^\n]s",students.full_name);
-    getchar();
+    scanf(" %[^\n]",students.full_name);
     printf("\t\t\tName of Father's Name: ");
-    scanf("%[^\n]s",students.father_name);
-    getchar();
+    scanf(" %[^\n]",students.father_name);
     printf("\t\t\tName of Mother's Name: ");
-    scanf("%[^\n]s",students.mother_name);
+    scanf(" %[^\n]",students.mother_name);
     printf("\t\t\tEnter students Age: ");
     scanf("%d", &students.age);
 
@@ -165,17 +199,17 @@ void updateStudentsInfo(StudentInfo Student_DB[], int StudentCount)
             if(option==1)
             {
                 printf("\t\t\t\t\t\tUpdated name: ");
-                scanf("%[^\n]s",Student_DB[i].full_name);
+                scanf(" %[^\n]",Student_DB[i].full_name);
             }
             else if(option=2)
             {
                 printf("\t\t\t\t\t\tUpdated Father Name: ");
-                scanf("%[^\n]s",Student_DB[i].father_name);
+                scanf(" %[^\n]",Student_DB[i].father_name);
             }
             else if(option=3)
             {
                 printf("\t\t\t\t\t\tUpdated Mother Name: ");
-                scanf("%[^\n]s",Student_DB[i].mother_name);
+                scanf(" %[^\n]",Student_DB[i].mother_name);
             }
             else if(option=4)
             {
@@ -227,11 +261,11 @@ void printDB(StudentInfo Student_DB[], int StudentCount)
     int i;
 
     printf("\n\t\t\t************************************************************************\n");
-    printf("\t\t\tID       StudentsName        FathersName          MothersName       Age \n");
-    printf("\t\t\t********************************************************************\n");
+    printf("\t\t\tStudentsName       FathersName         MothersName         ID       Age \n");
+    printf("\t\t\t************************************************************************\n");
     for(i=0; i<StudentCount; i++)
     {
-        printf("\n\t\t\t%d\t%s\t%s\t%s\t%d\n",Student_DB[i].Student_ID, Student_DB[i].full_name,Student_DB[i].father_name, Student_DB[i].mother_name, Student_DB[i].age);
+        printf("\t\t\t%-15s%-15s%-15s%-15d%d\n",Student_DB[i].full_name,Student_DB[i].father_name, Student_DB[i].mother_name, Student_DB[i].Student_ID, Student_DB[i].age);
     }
 }
 
@@ -243,10 +277,14 @@ void ReadDB(FILE *file, StudentInfo Student_DB[], int *StudentCount)
 
     while(!feof(file))
     {
-        fgets(Student_DB[i].full_name, 30, file);
-        fgets(Student_DB[i].father_name, 30, file);
-        fgets(Student_DB[i].mother_name, 30, file);
-        if(feof(file))
+        fgets(Student_DB[i].full_name, 20, file);
+        if (feof(file))
+            break;
+        fgets(Student_DB[i].father_name, 20, file);
+        if (feof(file))
+            break;
+        fgets(Student_DB[i].mother_name, 20, file);
+        if (feof(file))
             break;
         fscanf(file, "%d%d\n", &Student_DB[i].Student_ID, &Student_DB[i].age);
         i++;
@@ -260,7 +298,7 @@ void WriteDB(FILE *file, StudentInfo Student_DB[], int StudentCount)
     int i;
     for(i=0; i<StudentCount; i++)
     {
-        fprintf(file, "%d\t%s\t%s\t%s\t%d\n",Student_DB[i].Student_ID, Student_DB[i].full_name,Student_DB[i].father_name, Student_DB[i].mother_name, Student_DB[i].age);
+        fprintf(file, "%-20s\t%s\t%s\t%d\t%d\n",Student_DB[i].full_name,Student_DB[i].father_name, Student_DB[i].mother_name,Student_DB[i].Student_ID, Student_DB[i].age);
     }
 }
 
